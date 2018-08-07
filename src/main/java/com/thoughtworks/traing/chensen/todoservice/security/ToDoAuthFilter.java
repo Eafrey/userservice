@@ -1,5 +1,6 @@
 package com.thoughtworks.traing.chensen.todoservice.security;
 
+import afu.org.checkerframework.checker.oigj.qual.O;
 import com.google.common.collect.ImmutableList;
 import com.google.common.net.HttpHeaders;
 import com.thoughtworks.traing.chensen.todoservice.model.User;
@@ -8,6 +9,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,9 +35,10 @@ public class ToDoAuthFilter extends OncePerRequestFilter {
 
     private static final byte[] SECRET_KEY = "kitty".getBytes(Charset.defaultCharset());
 
-    public static String generateToken(int id) {
+    public static String generateToken(int id, String userName) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", id);
+        claims.put("name", userName);
 
         String token = Jwts.builder()
                 .addClaims(claims)
@@ -50,12 +54,13 @@ public class ToDoAuthFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (!StringUtils.isEmpty(token)) {
-            int id = getIdFromToken(token);
+//            int id = getIdFromToken(token);
 
+//            Optional<User> user = userService.findById(id);
 
-            Optional<User> user = userService.findById(id);
+            Optional<User> user = userService.verifiyInternalToken(token);
 
-            if (id != -1 && user.isPresent()) {
+            if (user.isPresent()) {
                 SecurityContextHolder.getContext().setAuthentication(
                         new UsernamePasswordAuthenticationToken(user.get().getUserName(), null,
                                 ImmutableList.of(new SimpleGrantedAuthority("admin"),

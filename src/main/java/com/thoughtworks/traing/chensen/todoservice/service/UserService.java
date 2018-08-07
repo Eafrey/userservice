@@ -1,5 +1,6 @@
 package com.thoughtworks.traing.chensen.todoservice.service;
 
+import afu.org.checkerframework.checker.oigj.qual.O;
 import com.thoughtworks.traing.chensen.todoservice.model.User;
 import com.thoughtworks.traing.chensen.todoservice.repository.UserRepository;
 import com.thoughtworks.traing.chensen.todoservice.security.ToDoAuthFilter;
@@ -69,7 +70,7 @@ public class UserService {
         }
         Optional<User> userInDB = userRepository.findByUserName(userName);
         int id = userInDB.get().getId();
-        String token = ToDoAuthFilter.generateToken(id);
+        String token = ToDoAuthFilter.generateToken(id, userName);
 
 //        return ResponseEntity.ok(token);
         return token;
@@ -82,10 +83,32 @@ public class UserService {
     public ResponseEntity verifiyToken(String token) {
         int id = ToDoAuthFilter.getIdFromToken(token);
         Optional<User> user = userRepository.findUserById(id);
-        if(id != -1 && user.isPresent()) {
+        if (id != -1 && user.isPresent()) {
             return ResponseEntity.ok(user.get());
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized...");
+        }
+    }
+
+//    public ResponseEntity verifiyInternalToken(String token) {
+//        String[] tokens = token.split(":");
+//        int id = Integer.parseInt(tokens[0]);
+//        Optional<User> user = userRepository.findUserById(id);
+//        if (user.isPresent() && user.get().getUserName().equals(tokens[1])) {
+//            return ResponseEntity.ok(user.get());
+//        } else {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized...");
+//        }
+//    }
+
+    public Optional<User> verifiyInternalToken(String token) {
+        String[] tokens = token.split(":");
+        int id = Integer.parseInt(tokens[0]);
+        Optional<User> user = userRepository.findUserById(id);
+        if (user.isPresent() && user.get().getUserName().equals(tokens[1])) {
+            return user;
+        } else {
+            return Optional.empty();
         }
     }
 }

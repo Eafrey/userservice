@@ -3,6 +3,7 @@ package com.thoughtworks.traing.chensen.todoservice.controller;
 import com.thoughtworks.traing.chensen.todoservice.model.User;
 import com.thoughtworks.traing.chensen.todoservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class UserApi {
@@ -31,7 +33,14 @@ public class UserApi {
 
     @PostMapping("/verification")
     public ResponseEntity verification(@RequestBody String token) {
-        return userService.verifiyToken(token);
+//        return userService.verifiyToken(token);
+        Optional<User> user = userService.verifiyInternalToken(token);
+        if (user.isPresent() ) {
+            return ResponseEntity.ok(user.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized...");
+        }
+
     }
 
 
