@@ -33,7 +33,11 @@ public class UserApi {
 
     @PostMapping("/verification")
     public ResponseEntity verification(@RequestBody String token) {
-//        return userService.verifiyToken(token);
+        return userService.verifiyToken(token);
+    }
+
+    @PostMapping("/verification-internal")
+    public ResponseEntity verificationInternal(@RequestBody String token) {
         Optional<User> user = userService.verifiyInternalToken(token);
         if (user.isPresent() ) {
             return ResponseEntity.ok(user.get());

@@ -90,16 +90,6 @@ public class UserService {
         }
     }
 
-//    public ResponseEntity verifiyInternalToken(String token) {
-//        String[] tokens = token.split(":");
-//        int id = Integer.parseInt(tokens[0]);
-//        Optional<User> user = userRepository.findUserById(id);
-//        if (user.isPresent() && user.get().getUserName().equals(tokens[1])) {
-//            return ResponseEntity.ok(user.get());
-//        } else {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized...");
-//        }
-//    }
 
     public Optional<User> verifiyInternalToken(String token) {
         String[] tokens = token.split(":");
