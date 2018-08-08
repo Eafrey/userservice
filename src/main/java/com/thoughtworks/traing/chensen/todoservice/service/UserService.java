@@ -78,15 +78,7 @@ public class UserService {
         return userRepository.findUserById(id);
     }
 
-    public ResponseEntity verifiyToken(String token) {
-        int id = ToDoAuthFilter.getIdFromToken(token);
-        Optional<User> user = userRepository.findUserById(id);
-        if (id != -1 && user.isPresent()) {
-            return ResponseEntity.ok(user.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized...");
-        }
-    }
+
 
 
     public Optional<User> verifiyInternalToken(String token) {
