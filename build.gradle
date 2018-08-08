@@ -26,12 +26,17 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	springCloudVersion = 'Edgware.SR4'
+}
+
 
 dependencies {
 	runtime('com.h2database:h2')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile('org.springframework.boot:spring-boot-starter-security')
 	testCompile('org.springframework.security:spring-security-test')
 	compile 'javax.xml.bind:jaxb-api:2.3.0'
@@ -42,6 +47,7 @@ dependencies {
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	compile 'com.google.guava:guava:25.1-jre'
 	compile 'org.json:json:20160810'
+	compile('org.springframework.cloud:spring-cloud-starter-consul-discovery')
 }
 
 tasks.withType(Checkstyle) {
@@ -57,5 +63,11 @@ tasks.withType(FindBugs) {
 		xml.enabled false
 		html.enabled true
 //		html.stylesheet resources.text.fromFile('config/xsl/findbugs-custom.xsl')
+	}
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 	}
 }

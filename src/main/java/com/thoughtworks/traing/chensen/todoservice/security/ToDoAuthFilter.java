@@ -8,6 +8,7 @@ import com.thoughtworks.traing.chensen.todoservice.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class ToDoAuthFilter extends OncePerRequestFilter {
     @Autowired
@@ -52,6 +54,8 @@ public class ToDoAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        log.info("incoming request {}", request.getServletPath());
+
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (!StringUtils.isEmpty(token)) {
 
@@ -60,11 +64,11 @@ public class ToDoAuthFilter extends OncePerRequestFilter {
             int id = Integer.parseInt(tokens[0]);
 
 //            if (user.isPresent()) {
-                SecurityContextHolder.getContext().setAuthentication(
-                        new UsernamePasswordAuthenticationToken(id, null,
-                                ImmutableList.of(new SimpleGrantedAuthority("admin"),
-                                        new SimpleGrantedAuthority("role")))
-                );
+            SecurityContextHolder.getContext().setAuthentication(
+                    new UsernamePasswordAuthenticationToken(id, null,
+                            ImmutableList.of(new SimpleGrantedAuthority("admin"),
+                                    new SimpleGrantedAuthority("role")))
+            );
 //            }
         }
 
