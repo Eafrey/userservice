@@ -1,11 +1,8 @@
 package com.thoughtworks.traing.chensen.todoservice.service;
 
-import afu.org.checkerframework.checker.oigj.qual.O;
 import com.thoughtworks.traing.chensen.todoservice.model.User;
 import com.thoughtworks.traing.chensen.todoservice.repository.UserRepository;
 import com.thoughtworks.traing.chensen.todoservice.security.ToDoAuthFilter;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,14 +63,15 @@ public class UserService {
         String password = user.getPassword();
         if (!verfiy(userName, password)) {
 //            return new ResponseEntity(HttpStatus.BAD_GATEWAY);
-            return "log in failed";
+            return "log in fail";
         }
+
         Optional<User> userInDB = userRepository.findByUserName(userName);
         int id = userInDB.get().getId();
-        String token = ToDoAuthFilter.generateToken(id, userName);
+//        String token = ToDoAuthFilter.generateToken(id, userName);
 
 //        return ResponseEntity.ok(token);
-        return token;
+        return String.valueOf(id);
     }
 
     public Optional<User> findById(int id) {
