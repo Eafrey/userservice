@@ -1,0 +1,34 @@
+version: "3"
+
+networks:
+  todo:
+
+services:
+  mysql:
+    image: coney/mysql:5
+    deploy:
+      replicas: 1
+      restart_policy:
+        delay: 10s
+    networks:
+      todo:
+        aliases:
+        - mysql
+    ports:
+    - "3306:3306"
+  user-service:
+      image: chensen/user-service:${VER}
+      deploy:
+        replicas: 2
+        restart_policy:
+          delay: 10s
+      depends_on:
+      - mysql
+      networks:
+        todo:
+          aliases:
+          - user-service
+      ports:
+      - "8081:8081"
+      environment:
+      - SPRING_PROFILES_ACTIVE=default
