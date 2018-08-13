@@ -47,7 +47,7 @@ dependencies {
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	compile 'com.google.guava:guava:25.1-jre'
 	compile 'org.json:json:20160810'
-	compile('org.springframework.cloud:spring-cloud-starter-config')
+//	compile('org.springframework.cloud:spring-cloud-starter-config')
 //	compile('org.springframework.cloud:spring-cloud-starter-consul-discovery')
 }
 
